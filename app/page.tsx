@@ -16,14 +16,22 @@ const MinimalGateIcon = ({ className = "" }: { className?: string }) => (
 
 // --- THE ETERNAL MARK: Original Architectural Variant ---
 const EternalMark = ({ active, mouse }: { active: boolean; mouse: { x: number; y: number } }) => {
-  const rotateX = typeof window !== 'undefined' ? (mouse.y - window.innerHeight / 2) * 0.015 : 0;
-  const rotateY = typeof window !== 'undefined' ? (mouse.x - window.innerWidth / 2) * -0.015 : 0;
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const rotateX = mounted ? (mouse.y - window.innerHeight / 2) * 0.015 : 0;
+  const rotateY = mounted ? (mouse.x - window.innerWidth / 2) * -0.015 : 0;
 
   return (
     <div
       className="relative transition-all duration-1000 ease-out"
       style={{
-        transform: `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${active ? 1.05 : 1})`,
+        transform: mounted
+          ? `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${active ? 1.05 : 1})`
+          : `perspective(1200px) rotateX(0deg) rotateY(0deg) scale(${active ? 1.05 : 1})`,
       }}
     >
       <svg viewBox="0 0 240 540" width="240" height="540" className="filter drop-shadow-[0_60px_120px_rgba(0,0,0,0.5)]">
